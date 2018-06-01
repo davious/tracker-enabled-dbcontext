@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Dynamic;
 using System.Linq;
 using TrackerEnabledDbContext.Common.Configuration;
@@ -13,9 +14,9 @@ namespace TrackerEnabledDbContext.Common.Auditors
 {
     internal class LogAuditor : IDisposable
     {
-        private readonly DbEntityEntry _dbEntry;
+        private readonly EntityEntry _dbEntry;
 
-        internal LogAuditor(DbEntityEntry dbEntry)
+        internal LogAuditor(EntityEntry dbEntry)
         {
             _dbEntry = dbEntry;
         }
@@ -94,7 +95,7 @@ namespace TrackerEnabledDbContext.Common.Auditors
         }
 
         private object GetPrimaryKeyValuesOf(
-            DbEntityEntry dbEntry,
+            EntityEntry dbEntry,
             List<PropertyConfiguerationKey> properties)
         {
             if (properties.Count == 1)

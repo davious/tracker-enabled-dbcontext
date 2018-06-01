@@ -1,4 +1,4 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TrackerEnabledDbContext.Common.Auditors.Comparators;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Extensions;
@@ -8,7 +8,7 @@ namespace TrackerEnabledDbContext.Common.Auditors
 {
     public class DeletetionLogDetailsAuditor: ChangeLogDetailsAuditor
     {
-        public DeletetionLogDetailsAuditor(DbEntityEntry dbEntry, AuditLog log) : base(dbEntry, log)
+        public DeletetionLogDetailsAuditor(EntityEntry dbEntry, AuditLog log) : base(dbEntry, log)
         {
         }
 

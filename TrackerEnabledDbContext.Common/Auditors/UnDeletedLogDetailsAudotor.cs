@@ -1,11 +1,12 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TrackerEnabledDbContext.Common.Models;
 
 namespace TrackerEnabledDbContext.Common.Auditors
 {
     public class UnDeletedLogDetailsAudotor : ChangeLogDetailsAuditor
     {
-        public UnDeletedLogDetailsAudotor(DbEntityEntry dbEntry, AuditLog log) : base(dbEntry, log)
+        public UnDeletedLogDetailsAudotor(EntityEntry dbEntry, AuditLog log) : base(dbEntry, log)
         {
         }
     }

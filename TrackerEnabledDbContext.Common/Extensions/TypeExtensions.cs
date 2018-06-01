@@ -10,7 +10,7 @@ namespace TrackerEnabledDbContext.Common.Extensions
         #region Constants
 
         //todo:improve this recognition
-        private const string ProxyNamespace = @"System.Data.Entity.DynamicProxies";
+        private const string ProxyNamespace = @"Microsoft.EntityFrameworkCore.DynamicProxies";
 
         #endregion
 

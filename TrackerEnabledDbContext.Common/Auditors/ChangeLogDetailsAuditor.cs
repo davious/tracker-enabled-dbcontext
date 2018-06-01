@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TrackerEnabledDbContext.Common.Auditors.Comparators;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Extensions;
@@ -12,10 +13,10 @@ namespace TrackerEnabledDbContext.Common.Auditors
 {
     public class ChangeLogDetailsAuditor : ILogDetailsAuditor
     {
-        protected readonly DbEntityEntry DbEntry;
+        protected readonly EntityEntry DbEntry;
         private readonly AuditLog _log;
 
-        public ChangeLogDetailsAuditor(DbEntityEntry dbEntry, AuditLog log)
+        public ChangeLogDetailsAuditor(EntityEntry dbEntry, AuditLog log)
         {
             DbEntry = dbEntry;
             _log = log;
@@ -62,7 +63,7 @@ namespace TrackerEnabledDbContext.Common.Auditors
             var propertyValues = (StateOfEntity() == EntityState.Added)
                 ? DbEntry.CurrentValues
                 : DbEntry.OriginalValues;
-            return propertyValues.PropertyNames;
+            return propertyValues.Properties.Select(p => p.Name);
         }
 
         protected virtual bool IsValueChanged(string propertyName)
@@ -103,14 +104,14 @@ namespace TrackerEnabledDbContext.Common.Auditors
 
         private bool IsComplexType(string propertyName)
         {
-            var entryMember = DbEntry.Member(propertyName) as DbComplexPropertyEntry;
+            var entryMember = DbEntry.Member(propertyName) as PropertyEntry;
 
             return entryMember != null;
         }
 
         private IEnumerable<AuditLogDetail> CreateComplexTypeLogDetails(string propertyName)
         {
-            var entryMember = DbEntry.Member(propertyName) as DbComplexPropertyEntry;
+            var entryMember = DbEntry.Member(propertyName) as PropertyEntry;
 
             if (entryMember != null)
             {

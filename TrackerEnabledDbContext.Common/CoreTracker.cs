@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Dynamic;
 using System.Linq;
 using TrackerEnabledDbContext.Common.Auditors;
@@ -27,7 +28,7 @@ namespace TrackerEnabledDbContext.Common
         {
             // Get all Deleted/Modified entities (not Unmodified or Detached or Added)
             foreach (
-                DbEntityEntry ent in
+                EntityEntry ent in
                     _context.ChangeTracker.Entries()
                         .Where(p => p.State == EntityState.Deleted || p.State == EntityState.Modified))
             {
@@ -50,7 +51,7 @@ namespace TrackerEnabledDbContext.Common
             }
         }
 
-        private EventType GetEventType(DbEntityEntry entry)
+        private EventType GetEventType(EntityEntry entry)
         {
             if(entry.State == EntityState.Deleted) return EventType.Deleted;
 
@@ -78,15 +79,15 @@ namespace TrackerEnabledDbContext.Common
             return EventType.Modified;
         }
 
-        public IEnumerable<DbEntityEntry> GetAdditions()
+        public IEnumerable<EntityEntry> GetAdditions()
         {
             return _context.ChangeTracker.Entries().Where(p => p.State == EntityState.Added).ToList();
         }
 
-        public void AuditAdditions(object userName, IEnumerable<DbEntityEntry> addedEntries, ExpandoObject metadata)
+        public void AuditAdditions(object userName, IEnumerable<EntityEntry> addedEntries, ExpandoObject metadata)
         {
             // Get all Added entities
-            foreach (DbEntityEntry ent in addedEntries)
+            foreach (EntityEntry ent in addedEntries)
             {
                 using (var auditer = new LogAuditor(ent))
                 {
