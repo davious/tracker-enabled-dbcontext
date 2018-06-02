@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TrackerEnabledDbContext.Common;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.EventArgs;
@@ -19,14 +17,7 @@ namespace TrackerEnabledDbContext.Identity
 {
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
          Justification = "False positive.  IDisposable is inherited via DbContext.  See http://stackoverflow.com/questions/8925925/code-analysis-ca1063-fires-when-deriving-from-idisposable-and-providing-implemen for details.")]
-    public class TrackerIdentityContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim> :
-        IdentityDbContext<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim>, ITrackerContext
-        
-        where TUser : IdentityUser<TKey, TUserLogin, TUserRole, TUserClaim> 
-        where TRole : IdentityRole<TKey, TUserRole> 
-        where TUserLogin : IdentityUserLogin<TKey> 
-        where TUserRole : IdentityUserRole<TKey> 
-        where TUserClaim : IdentityUserClaim<TKey>
+    public class TrackerIdentityContext: IdentityDbContext, ITrackerContext
     {
         private readonly CoreTracker _coreTracker;
 
@@ -67,30 +58,7 @@ namespace TrackerEnabledDbContext.Identity
             _coreTracker = new CoreTracker(this);
         }
 
-        public TrackerIdentityContext(DbCompiledModel model) : base(model)
-        {
-            _coreTracker = new CoreTracker(this);
-        }
-
-        public TrackerIdentityContext(string nameOrConnectionString) : base(nameOrConnectionString)
-        {
-            _coreTracker = new CoreTracker(this);
-        }
-
-        public TrackerIdentityContext(string nameOrConnectionString, DbCompiledModel model)
-            : base(nameOrConnectionString, model)
-        {
-            _coreTracker = new CoreTracker(this);
-        }
-
-        public TrackerIdentityContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
-        {
-            _coreTracker = new CoreTracker(this);
-        }
-
-        public TrackerIdentityContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
+        public TrackerIdentityContext(DbContextOptions options) : base(options)
         {
             _coreTracker = new CoreTracker(this);
         }
@@ -124,7 +92,7 @@ namespace TrackerEnabledDbContext.Identity
 
             _coreTracker.AuditChanges(userName, metadata);
 
-            IEnumerable<DbEntityEntry> addedEntries = _coreTracker.GetAdditions();
+            var addedEntries = _coreTracker.GetAdditions();
             // Call the original SaveChanges(), which will save both the changes made and the audit records...Note that added entry auditing is still remaining.
             int result = base.SaveChanges();
             //By now., we have got the primary keys of added entries of added entiries because of the call to savechanges.
@@ -221,7 +189,7 @@ namespace TrackerEnabledDbContext.Identity
 
             _coreTracker.AuditChanges(userName, metadata);
 
-            IEnumerable<DbEntityEntry> addedEntries = _coreTracker.GetAdditions();
+            var addedEntries = _coreTracker.GetAdditions();
 
             // Call the original SaveChanges(), which will save both the changes made and the audit records...Note that added entry auditing is still remaining.
             int result = await base.SaveChangesAsync(cancellationToken);
@@ -275,7 +243,7 @@ namespace TrackerEnabledDbContext.Identity
         ///     A task that represents the asynchronous save operation.  The task result
         ///     contains the number of objects written to the underlying database.
         /// </returns>
-        public override async Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
             if (!TrackingEnabled)
             {
@@ -308,37 +276,5 @@ namespace TrackerEnabledDbContext.Identity
         }
 
         #endregion --
-    }
-
-    public class TrackerIdentityContext<TUser> : 
-        TrackerIdentityContext<TUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
-        where TUser : IdentityUser
-    {
-        public TrackerIdentityContext()
-        {
-        }
-
-        public TrackerIdentityContext(DbCompiledModel model) : base(model)
-        {
-        }
-
-        public TrackerIdentityContext(string nameOrConnectionString) : base(nameOrConnectionString)
-        {
-        }
-
-        public TrackerIdentityContext(string nameOrConnectionString, DbCompiledModel model)
-            : base(nameOrConnectionString, model)
-        {
-        }
-
-        public TrackerIdentityContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
-        {
-        }
-
-        public TrackerIdentityContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
-        {
-        }
     }
 }
