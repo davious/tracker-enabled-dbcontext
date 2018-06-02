@@ -1,20 +1,28 @@
 ﻿using System;
-using System.Data.Entity;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.EntityFrameworkCore.Storage;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Testing.Code;
+using Xunit;
 
 namespace TrackerEnabledDbContext.Common.Testing
 {
-    [TestClass]
-    public class PersistanceTests<TContext> where TContext : ITestDbContext, new()
+    public class PersistanceTests<TContext>: IDisposable where TContext : ITestDbContext, new()
     {
+        public PersistanceTests()
+        {
+            _transaction = Db.Database.BeginTransaction();
+            GlobalTrackingConfig.Enabled = true;
+            GlobalTrackingConfig.TrackEmptyPropertiesOnAdditionAndDeletion = false;
+            GlobalTrackingConfig.DisconnectedContext = false;
+            GlobalTrackingConfig.ClearFluentConfiguration();
+        }
+
         private const string TestConnectionString = "DefaultTestConnection";
         private readonly RandomDataGenerator _randomDataGenerator = new RandomDataGenerator();
 
         protected TContext Db = new TContext();
 
-        private DbContextTransaction _transaction;
+        private IDbContextTransaction _transaction;
 
         protected bool RollBack = true;
 
@@ -28,18 +36,7 @@ namespace TrackerEnabledDbContext.Common.Testing
 
         protected ObjectFactory<TContext> ObjectFactory = new ObjectFactory<TContext>();
 
-        [TestInitialize]
-        public virtual void Initialize()
-        {
-            _transaction = Db.Database.BeginTransaction();
-            GlobalTrackingConfig.Enabled = true;
-            GlobalTrackingConfig.TrackEmptyPropertiesOnAdditionAndDeletion = false;
-            GlobalTrackingConfig.DisconnectedContext = false;
-            GlobalTrackingConfig.ClearFluentConfiguration();
-        }
-
-        [TestCleanup]
-        public virtual void CleanUp()
+        void IDisposable.Dispose()
         {
             if (RollBack)
             {
