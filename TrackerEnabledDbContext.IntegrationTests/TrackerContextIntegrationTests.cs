@@ -411,9 +411,9 @@ namespace TrackerEnabledDbContext.IntegrationTests
             var entry = Db.ChangeTracker.Entries().First();
             var auditor = new AdditionLogDetailsAuditor(entry, null);
 
-            Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
+            //Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
             var auditLogDetails = auditor.CreateLogDetails().ToList();
-            Db.Database.Log = null;
+            //Db.Database.Log = null;
         }
 
         [Fact]
@@ -427,9 +427,9 @@ namespace TrackerEnabledDbContext.IntegrationTests
             var entry = Db.ChangeTracker.Entries().First();
             var auditor = new ChangeLogDetailsAuditor(entry, null);
 
-            Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
+            //Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
             var auditLogDetails = auditor.CreateLogDetails().ToList();
-            Db.Database.Log = null;
+            //Db.Database.Log = null;
         }
 
         [Fact]
@@ -443,9 +443,9 @@ namespace TrackerEnabledDbContext.IntegrationTests
             var entry = Db.ChangeTracker.Entries().First();
             var auditor = new ChangeLogDetailsAuditor(entry, null);
 
-            Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
+            //Db.Database.Log = sql => Assert.Fail("Expected no database queries but the following query was executed: {0}", sql);
             var auditLogDetails = auditor.CreateLogDetails().ToList();
-            Db.Database.Log = null;
+            //Db.Database.Log = null;
         }
 
         [Fact]

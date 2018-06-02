@@ -12,9 +12,24 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             ?? "DefaultTestConnection";
 
         public TestTrackerIdentityContext()
-            : base(TestConnectionString)
+            : base()
         {
-            Database.SetInitializer(new DropCreateDatabaseAlways<TestTrackerIdentityContext>());
+            Database.EnsureCreated();
+            Database.EnsureDeleted();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(TestConnectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ModelWithCompositeKey>()
+                        .HasKey(c => new { c.Key1, c.Key2 });
+            modelBuilder.Entity<ModelWithComplexType>()
+                        .OwnsOne(e => e.ComplexType);
         }
 
         public DbSet<NormalModel> NormalModels { get; set; }
