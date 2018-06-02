@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Testing.Models;
 

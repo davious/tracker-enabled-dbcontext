@@ -1,6 +1,6 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Models;
 using TrackerEnabledDbContext.Common.Testing;
@@ -9,18 +9,16 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class SoftDeleteTests : PersistanceTests<TestTrackerContext>
     {
-        [TestInitialize]
-        public void InitializeSoftDeletionTests()
+        public SoftDeleteTests()
         {
             //setup soft deletable config
             GlobalTrackingConfig.SetSoftDeletableCriteria<ISoftDeletable>
                 (entity => entity.IsDeleted);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldCreateSoftDeleteLog()
         {
             //create a softdeletable entity and soft delete it
@@ -49,7 +47,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldCreateSoftDeleteLogForMultiplePropertiesChanged()
         { 
             //create a softdeletable entity and soft delete it
@@ -85,7 +83,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldCreateUnDeletedLog()
         {
             var deletable = new SoftDeletableModel
@@ -123,7 +121,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 });
         }
 
-        [TestMethod]
+        [Fact]
         public async Task ShouldCreateUnDeletedLogForMultiplePropertiesChanged()
         {
             string oldDescription = RandomText;

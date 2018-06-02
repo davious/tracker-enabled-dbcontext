@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using TrackerEnabledDbContext.Common.Auditors;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Models;
@@ -14,10 +14,9 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class TrackerContextIntegrationTests : PersistanceTests<TestTrackerContext>
     {
-        [TestMethod]
+        [Fact]
         public void Can_save_model()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -26,7 +25,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             model.Id.AssertIsNotZero();
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_save_when_entity_state_changed()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -35,7 +34,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             model.Id.AssertIsNotZero();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_save_async()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -44,7 +43,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             model.Id.AssertIsNotZero();
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_save_child_to_parent()
         {
             var child = new ChildModel();
@@ -59,7 +58,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             parent.Id.AssertIsNotZero();
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_save_child_to_parent_when_entity_state_changed()
         {
             var child = new ChildModel();
@@ -74,7 +73,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             parent.Id.AssertIsNotZero();
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_addition_when_username_provided()
         {
             string randomText = RandomText;
@@ -90,7 +89,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_addition_when_usermane_not_provided()
         {
             string randomText = RandomText;
@@ -105,7 +104,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_addition_when_state_changed_directly()
         {
             string randomText = RandomText;
@@ -121,7 +120,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_deletion()
         {
             string description = RandomText;
@@ -143,7 +142,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_deletion_when_state_changed()
         {
             string description = RandomText;
@@ -166,7 +165,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_local_propery_change()
         {
             //add enity
@@ -195,7 +194,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             entity.AssertAuditForModification(Db, entity.Id, null, expectedLog);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_navigational_property_change()
         {
             //add enitties
@@ -232,7 +231,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             child.AssertAuditForModification(Db, child.Id, null, expectedLog);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_complex_type_property_change()
         {
             //add enity
@@ -265,7 +264,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             entity.AssertAuditForModification(Db, entity.Id, null, expectedLog);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_skip_tracking_of_property()
         {
             string username = RandomText;
@@ -284,7 +283,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_track_composite_keys()
         {
             string key1 = RandomText;
@@ -309,7 +308,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x=>x.Key2);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_get_logs_by_table_name()
         {
             string descr = RandomText;
@@ -330,7 +329,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 .AssertCountIsNotZero("no log details found");
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_get_logs_by_entity_type()
         {
             string descr = RandomText;
@@ -351,7 +350,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 .AssertCountIsNotZero("no log details found");
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_get_all_logs()
         {
             string descr = RandomText;
@@ -372,7 +371,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 .AssertCountIsNotZero("no log details found");
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_save_changes_with_userID()
         {
             int userId = RandomNumber;
@@ -403,7 +402,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             entity.AssertAuditForModification(Db, entity.Id, userId.ToString(), expectedLog);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_Create_AuditLogDetail_ForAddedEntity_WithoutQueryingDatabase()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -417,7 +416,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             Db.Database.Log = null;
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_Create_AuditLogDetail_ForModifiedEntity_WithoutQueryingDatabase()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -433,7 +432,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             Db.Database.Log = null;
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_Create_AuditLogDetail_ForDeletedEntity_WithoutQueryingDatabase()
         {
             NormalModel model = ObjectFactory.Create<NormalModel>();
@@ -449,7 +448,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             Db.Database.Log = null;
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Not_Log_When_Value_Not_changed()
         {
             //arrange
@@ -479,7 +478,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             entity.AssertNoLogs(Db, entity.Id, EventType.Modified);
         }
 
-        [TestMethod]
+        [Fact]
         public void Shoud_Not_Log_EmptyProperties_OnAddition()
         {
             //arrange
@@ -496,7 +495,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Shoud_Not_Log_EmptyProperties_On_Deletions()
         {
             //arrange
@@ -514,7 +513,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Log_EmptyProperties_When_Configured_WhileAdding()
         {
             //arrange
@@ -537,7 +536,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Log_EmptyProperties_When_Configured_WhileDeleting()
         {
             //arrange
@@ -565,7 +564,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
 
 
 
-        [TestMethod]
+        [Fact]
         public void Can_recognise_context_tracking_indicator_when_disabled()
         {
 

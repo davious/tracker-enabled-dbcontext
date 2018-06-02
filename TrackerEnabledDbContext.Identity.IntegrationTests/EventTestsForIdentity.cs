@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Models;
 using TrackerEnabledDbContext.Common.Testing;
@@ -7,10 +7,9 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.Identity.IntegrationTests
 {
-    [TestClass]
     public class EventTestsForIdentity : PersistanceTests<TestTrackerIdentityContext>
     {
-        [TestMethod]
+        [Fact]
         public void CanRaiseAddEvent()
         {
             using (var context = GetNewContextInstance())
@@ -40,7 +39,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 //make sure log is saved in database
                 entity.AssertAuditForAddition(context, entity.Id, null,
@@ -49,7 +48,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanRaiseModifyEvent()
         {
             //TODO: modify test tracker context and identity test tracker context so that on disposal they revert the changes
@@ -80,7 +79,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(modifyEventRaised);
+                Assert.True(modifyEventRaised);
 
                 existingEntity.AssertAuditForModification(context, existingEntity.Id, null,
                     new AuditLogDetail
@@ -92,7 +91,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanRaiseDeleteEvent()
         {
             using (var context = GetNewContextInstance())
@@ -120,7 +119,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 existingEntity.AssertAuditForDeletion(context, existingEntity.Id, null,
                     x => x.Description,
@@ -128,7 +127,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanRaiseSoftDeleteEvent()
         {
             GlobalTrackingConfig.SetSoftDeletableCriteria<ISoftDeletable>
@@ -160,7 +159,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 existingEntity.AssertAuditForSoftDeletion(context, existingEntity.Id, null,
                     new AuditLogDetail
@@ -172,7 +171,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanRaiseUnDeleteEvent()
         {
             GlobalTrackingConfig.SetSoftDeletableCriteria<ISoftDeletable>
@@ -208,7 +207,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 existingEntity.AssertAuditForUndeletion(context, existingEntity.Id, null,
                     new AuditLogDetail
@@ -220,7 +219,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanSkipTrackingUsingEvent()
         {
             using (var context = GetNewContextInstance())
@@ -245,14 +244,14 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 var entity = ObjectFactory.Create<TrackedModelWithMultipleProperties>(save:true, testDbContext:context);
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 //make sure log is saved in database
                 entity.AssertNoLogs(context, entity.Id, EventType.Added);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CanChangeEntityInEvent()
         {
             using (var context = GetNewContextInstance())
@@ -286,7 +285,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                 context.SaveChanges();
 
                 //assert
-                Assert.IsTrue(eventRaised);
+                Assert.True(eventRaised);
 
                 existingEntity.AssertAuditForModification(context, existingEntity.Id, null,
                     new AuditLogDetail
@@ -297,7 +296,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
                     });
 
                 context.Entry(existingEntity).Reload();
-                Assert.AreEqual(existingEntity.Name, modifiedValue);
+                Assert.Equal(existingEntity.Name, modifiedValue);
             }
         }
 

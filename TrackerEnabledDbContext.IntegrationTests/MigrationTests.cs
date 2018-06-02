@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using TrackerEnabledDbContext.Common.Models;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Tools;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class MigrationTests: PersistanceTests<TestTrackerContext>
     {
         private LogDataMigration _migration;
 
-        [TestInitialize]
-        public void InitializeTest()
+        public MigrationTests()
         {
             _migration = new LogDataMigration(Db);
 
@@ -29,7 +27,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             };
         }
 
-        [TestMethod]
+        [Fact]
         public void CanMigrateOldLogDataToVersion3()
         {
             //arrange
@@ -72,13 +70,13 @@ namespace TrackerEnabledDbContext.IntegrationTests
             _migration.MigrateLegacyLogData();
 
             //assert
-            Assert.IsTrue(entityNameChange, "entity name not changed");
-            Assert.IsTrue(magnitudePropertyNameChanged, "magnitude property name was not supposed to change");
-            Assert.IsFalse(directionPropertyChanged, "direction property should not change");
-            Assert.IsFalse(subjectPropertyChanged,"sunject property should not change");
+            Assert.True(entityNameChange, "entity name not changed");
+            Assert.True(magnitudePropertyNameChanged, "magnitude property name was not supposed to change");
+            Assert.False(directionPropertyChanged, "direction property should not change");
+            Assert.False(subjectPropertyChanged,"sunject property should not change");
         }
 
-        [TestMethod]
+        [Fact]
         public async Task CanMigrateOldLogDataToVersion3ASyncWithProgress()
         {
             //arrange
@@ -128,10 +126,10 @@ namespace TrackerEnabledDbContext.IntegrationTests
             await _migration.MigrateLegacyLogDataAsync(progress);
 
             //assert
-            Assert.IsTrue(entityNameChange, "entity name not changed");
-            Assert.IsTrue(magnitudePropertyNameChanged, "magnitude property name was not supposed to change");
-            Assert.IsFalse(directionPropertyChanged, "direction property should not change");
-            Assert.IsFalse(subjectPropertyChanged, "sunject property should not change");
+            Assert.True(entityNameChange, "entity name not changed");
+            Assert.True(magnitudePropertyNameChanged, "magnitude property name was not supposed to change");
+            Assert.False(directionPropertyChanged, "direction property should not change");
+            Assert.False(subjectPropertyChanged, "sunject property should not change");
         }
 
         private void InsertFakeLegacyLog()

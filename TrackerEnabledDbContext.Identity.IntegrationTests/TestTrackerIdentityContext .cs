@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Data.Entity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.Identity.IntegrationTests
 {
-    public class TestTrackerIdentityContext : TrackerIdentityContext<IdentityUser>, ITestDbContext
+    public class TestTrackerIdentityContext : TrackerIdentityContext, ITestDbContext
     {
         protected static readonly string TestConnectionString = Environment.GetEnvironmentVariable("TestGenericConnectionString")
             ?? "DefaultTestConnection";

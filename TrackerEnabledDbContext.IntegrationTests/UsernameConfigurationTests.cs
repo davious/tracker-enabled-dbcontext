@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Testing.Extensions;
 using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class UsernameConfigurationTests : PersistanceTests<TestTrackerContext>
     {
-        [TestMethod]
+        [Fact]
         public void Can_use_username_factory()
         {
             Db.ConfigureUsername(() => "bilal");
@@ -26,7 +25,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 );
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_username_factory_override_default_username()
         {
             Db.ConfigureUsername(() => "bilal");
@@ -45,7 +44,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 );
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_use_default_username()
         {
             Db.ConfigureUsername("rahul");

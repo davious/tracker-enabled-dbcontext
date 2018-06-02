@@ -1,5 +1,5 @@
-﻿using System.Data.Entity;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.EntityFrameworkCore;
+using Xunit;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Models;
 using TrackerEnabledDbContext.Common.Testing;
@@ -8,16 +8,14 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class DisconnectedContextTests : PersistanceTests<TestTrackerContext>
     {
-        [TestInitialize]
-        public void InitializeTest()
+        public DisconnectedContextTests()
         {
             GlobalTrackingConfig.DisconnectedContext = true;
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Be_Able_To_Update()
         {
             NormalModel entity = ObjectFactory.Create<NormalModel>(save: true);
@@ -42,7 +40,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 });
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Be_Soft_Deleted()
         {
             GlobalTrackingConfig.SetSoftDeletableCriteria<ISoftDeletable>(x => x.IsDeleted);
@@ -70,7 +68,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
         }
 
 
-        [TestMethod]
+        [Fact]
         public void should_update_with_no_logs()
         {
             EntityTracker.TrackAllProperties<TrackedModelWithMultipleProperties>();
@@ -96,7 +94,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             newEntity.AssertNoLogs(newContext2, newEntity.Id, EventType.Modified);
         }
 
-        [TestMethod]
+        [Fact]
         public void Should_Be_able_to_insert()
         {
             var entity = new NormalModel
@@ -114,7 +112,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x => x.Description);
         }
 
-        [TestMethod]
+        [Fact]
         public void should_be_able_to_delete()
         {
             EntityTracker.TrackAllProperties<TrackedModelWithMultipleProperties>()

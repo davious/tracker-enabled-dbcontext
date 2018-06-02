@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Testing.Extensions;
@@ -8,10 +8,9 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.IntegrationTests
 {
-    [TestClass]
     public class FluentConfigurationTests : PersistanceTests<TestTrackerContext>
     {
-        [TestMethod]
+        [Fact]
         public void Can_recognise_global_tracking_indicator_when_disabled()
         {
             GlobalTrackingConfig.Enabled = false;
@@ -28,7 +27,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             model.AssertNoLogs(Db, model.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_recognise_global_tracking_indicator_when_enabled()
         {
             EntityTracker
@@ -51,7 +50,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
                 x=>x.StartTime);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_Override_annotation_based_configuration_for_entity_skipTracking()
         {
             var model = new NormalModel();
@@ -67,7 +66,7 @@ namespace TrackerEnabledDbContext.IntegrationTests
             model.AssertNoLogs(Db,model.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void Can_Override_annotation_based_configuration_for_property()
         {
             var model = new TrackedModelWithMultipleProperties

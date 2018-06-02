@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using TrackerEnabledDbContext.Common.Configuration;
 using TrackerEnabledDbContext.Common.Testing;
 using TrackerEnabledDbContext.Common.Testing.Extensions;
@@ -8,10 +8,9 @@ using TrackerEnabledDbContext.Common.Testing.Models;
 
 namespace TrackerEnabledDbContext.Identity.IntegrationTests
 {
-    [TestClass]
     public class MetadataTests : PersistanceTests<TestTrackerIdentityContext>
     {
-        [TestMethod]
+        [Fact]
         public void ShouldAddSingleMetadata_WhenSingleMetadataIsProvided()
         {
             Db.ConfigureMetadata(m =>
@@ -34,7 +33,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             });
         }
 
-        [TestMethod]
+        [Fact]
         public async Task ShouldAddSingleMetadata_WhenSingleMetadataIsProvided_Async()
         {
             Db.ConfigureMetadata(m =>
@@ -57,7 +56,7 @@ namespace TrackerEnabledDbContext.Identity.IntegrationTests
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotAddMetadata_WhenValueIsNull()
         {
             Db.ConfigureMetadata(m =>
