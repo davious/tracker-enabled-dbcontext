@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SampleLogMaker.Models;

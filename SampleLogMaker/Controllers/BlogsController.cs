@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SampleLogMaker.Models;
 using System.Threading.Tasks;
 

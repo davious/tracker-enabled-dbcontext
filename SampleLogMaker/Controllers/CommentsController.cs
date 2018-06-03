@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SampleLogMaker.Models;
 
 namespace SampleLogMaker.Controllers

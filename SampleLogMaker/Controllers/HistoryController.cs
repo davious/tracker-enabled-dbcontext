@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SampleLogMaker.Models;
 using SampleLogMaker.ViewModels;
 using TrackerEnabledDbContext.Common.Models;
